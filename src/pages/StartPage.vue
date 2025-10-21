@@ -1,6 +1,16 @@
 <script setup>
-import { computed, reactive, ref, unref, useTemplateRef } from 'vue'
+import { computed, ref, unref, useTemplateRef } from 'vue'
 import { v4 as uuidv4 } from 'uuid';
+
+//Дополнительно
+//модалка на удаление
+//наведение красоты
+//типизация
+//компоненты
+//баттон для кнопки удаления
+
+
+
 
 class List {
   constructor(classObj, list) {
@@ -162,6 +172,10 @@ const currentPageContent = computed(
   () => filteredOrganizationList.value.slice((pageNumber.value - 1) * 10,
     (pageNumber.value - 1) * 10 + 10))
 const setPageNumber = newPageNumber => pageNumber.value = newPageNumber
+
+const removeOrganization = id => {
+  organizationList.value.remove(id)
+}
 </script>
 
 <template>
@@ -201,7 +215,14 @@ const setPageNumber = newPageNumber => pageNumber.value = newPageNumber
           <td>{{ organization.directorName }}</td>
           <td>{{ organization.telephoneNumber }}</td>
           <td>{{ organization.address.fullAddress }}</td>
-
+          <td @click.stop="removeOrganization(organization.id)">
+            <img
+              src="/src/assets/images/delete.svg"
+              alt="delete"
+              class="icon-24"
+              title="удалить"
+            />
+          </td>
         </tr>
         </tbody>
       </table>
@@ -253,7 +274,8 @@ const setPageNumber = newPageNumber => pageNumber.value = newPageNumber
               class="base-button"
               :disabled="!isOrganizationValid"
               @click="() => currentOrganization.id ? updateOrganization(currentOrganization) : createOrganization(currentOrganization)"
-            >Ок
+            >
+              Ок
             </button>
           </div>
         </div>
