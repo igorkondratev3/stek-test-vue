@@ -10,6 +10,7 @@
   color: #000000;
   letter-spacing: 0.065em;
 
+  &.active-button,
   &:hover {
     color: white;
     background-color: black;

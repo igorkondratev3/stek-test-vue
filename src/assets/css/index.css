@@ -2,6 +2,7 @@
 @import './styles/scrollbar.css';
 @import './styles/importFonts.css';
 @import './styles/button.css';
+@import "./styles/icons.css";
 
 :root {
   --base: 100px;

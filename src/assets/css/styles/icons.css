@@ -1,0 +1,5 @@
+.icon-24 {
+  display: block;
+  width: calc(var(--base) * 0.24);
+  height: calc(var(--base) * 0.24);
+}

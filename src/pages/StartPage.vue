@@ -148,6 +148,20 @@ const validateObject = (obj, objValidationParams) => {
 const isOrganizationValid = computed(
   () => validateObject(currentOrganization.value, organizationValidationParams))
 
+
+const directorNameFilter = ref('')
+
+const filteredOrganizationList = computed(() => organizationList.value.list.filter(
+  organization => organization.directorName.includes(directorNameFilter.value)))
+
+const elementsInPage = 10
+const numberOfPages = computed(
+  () => Math.ceil(filteredOrganizationList.value.length / elementsInPage))
+const pageNumber = ref(1)
+const currentPageContent = computed(
+  () => filteredOrganizationList.value.slice((pageNumber.value - 1) * 10,
+    (pageNumber.value - 1) * 10 + 10))
+const setPageNumber = newPageNumber => pageNumber.value = newPageNumber
 </script>
 
 <template>
@@ -155,7 +169,11 @@ const isOrganizationValid = computed(
     <header class="start-page__header">Справочник организаций</header>
     <main class="start-page__main">
 
-      <input type="text" placeholder="Найти по ФИО...">
+      <input
+        type="text"
+        placeholder="Найти по ФИО..."
+        v-model="directorNameFilter"
+      >
 
       <button
         class="base-button"
@@ -174,7 +192,7 @@ const isOrganizationValid = computed(
         </thead>
         <tbody>
         <tr
-          v-for="organization in organizationList.list"
+          v-for="organization in currentPageContent"
           :key="organization.id"
           @click="openCreateOrganizationModal(organization)"
           class="cursor-pointer"
@@ -183,10 +201,21 @@ const isOrganizationValid = computed(
           <td>{{ organization.directorName }}</td>
           <td>{{ organization.telephoneNumber }}</td>
           <td>{{ organization.address.fullAddress }}</td>
+
         </tr>
         </tbody>
       </table>
 
+
+      <button
+        class="base-button"
+        :class="{'active-button': n === pageNumber }"
+        v-for="n in numberOfPages"
+        :key="n + 'pageNumber'"
+        @click="setPageNumber(n)"
+      >
+        {{ n }}
+      </button>
 
       <dialog
         class="dialog"
