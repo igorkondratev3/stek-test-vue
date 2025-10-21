@@ -1,6 +1,7 @@
 @import './styles/reset.css';
 @import './styles/scrollbar.css';
 @import './styles/importFonts.css';
+@import './styles/button.css';
 
 :root {
   --base: 100px;
