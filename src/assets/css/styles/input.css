@@ -1,0 +1,19 @@
+.base-input {
+  display: block;
+  align-self: center;
+  height: calc(var(--base) * 0.32);
+  width: calc(var(--base) * 3.2);
+  padding: calc(var(--base) * 0.16) calc(var(--base) * 0.24) calc(var(--base) * 0.16) calc(var(--base) * 0.08);
+  outline: none;
+  border: calc(var(--base) * 0.01) solid rgba(0, 0, 0, 0.5);
+  background-color: white;
+  font:
+    400 calc(var(--base) * 0.16) 'Advent ProCY',
+    'Advent ProLA';
+  color: #000000;
+  letter-spacing: 0.065em;
+
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.8)
+  }
+}

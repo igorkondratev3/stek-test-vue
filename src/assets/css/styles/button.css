@@ -32,3 +32,7 @@
     opacity: 25%;
   }
 }
+
+.pagination-button {
+  width: calc(var(--base) * 0.32);
+}

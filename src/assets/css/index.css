@@ -3,6 +3,8 @@
 @import './styles/importFonts.css';
 @import './styles/button.css';
 @import './styles/icons.css';
+@import './styles/input.css';
+@import './styles/dialog.css';
 
 :root {
   --base: 100px;
