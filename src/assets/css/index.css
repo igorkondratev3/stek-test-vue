@@ -5,6 +5,7 @@
 @import './styles/icons.css';
 @import './styles/input.css';
 @import './styles/dialog.css';
+@import './styles/table.css';
 
 :root {
   --base: 100px;
@@ -42,3 +43,10 @@ body {
   color: #000000;
   letter-spacing: 0.065em;
 }
+
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+

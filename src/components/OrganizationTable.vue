@@ -1,0 +1,130 @@
+<script setup lang="ts">
+import { IOrganization, IOrganizationTableProps } from '@/types'
+import { usePagination, useSorting } from '@/composables'
+import { toRef } from 'vue'
+
+const props = defineProps<IOrganizationTableProps>()
+
+defineEmits<{
+  selectOrganization: [organization: IOrganization]
+  removeOrganization: [id: number]
+}>()
+
+const {
+  sortedParams,
+  changeSortParam,
+  sortedArr: sortedOrganizationList
+} = useSorting(toRef(props, 'organizationList'), props.sortedFieldNameList)
+
+const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = usePagination(sortedOrganizationList)
+</script>
+
+<template>
+  <table class="organization-table">
+    <thead>
+      <tr>
+        <th
+          @click="changeSortParam('name')"
+          class="column organization-table__column_col_20"
+        >
+          <div class='organization-table__column_sorted'>
+            Название
+            <img
+                v-show="sortedParams.name.sortParam"
+                src="/src/assets/images/arrow_down.svg"
+                alt="arrow"
+                class="icon-24"
+                :class="{ rotate_180deg: sortedParams.name.sortParam === 'DESC' }"
+                title="удалить"
+            />
+          </div>
+        </th>
+        <th
+          @click="changeSortParam('directorName')"
+          class="column organization-table__column_col_20"
+        >
+          <div class='organization-table__column_sorted'>
+            ФИО директора
+            <img
+                v-show="sortedParams.directorName.sortParam"
+                src="/src/assets/images/arrow_down.svg"
+                alt="arrow"
+                class="icon-24"
+                :class="{ rotate_180deg: sortedParams.directorName.sortParam === 'DESC' }"
+                title="удалить"
+            />
+          </div>
+        </th>
+        <th class="column organization-table__column_col_20">Номер телефона</th>
+        <th class="column organization-table__column_col_30">Адрес</th>
+        <th class="column organization-table__column_col_10"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="organization in currentPageContent"
+        :key="organization.id"
+        @click="$emit('selectOrganization', organization)"
+        class="cursor-pointer"
+      >
+        <td>{{ organization.name }}</td>
+        <td>{{ organization.directorName }}</td>
+        <td>{{ organization.telephoneNumber }}</td>
+        <td>{{ organization.address.fullAddress }}</td>
+        <td @click.stop="$emit('removeOrganization', organization.id)">
+          <img
+            src="/src/assets/images/delete.svg"
+            alt="delete"
+            class="icon-24"
+            title="удалить"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button
+        class="base-button pagination-button"
+        :class="{ 'active-button': n === pageNumber }"
+        v-for="n in numberOfPages"
+        :key="n + 'pageNumber'"
+        @click="changePageNumber(n)"
+    >
+      {{ n }}
+    </button>
+  </div>
+</template>
+
+<style>
+.organization-table {
+  width: 100%;
+  margin-top: calc(var(--base) * 0.08);
+}
+
+.organization-table__column_col_20 {
+  width: 20%;
+}
+
+.organization-table__column_col_30 {
+  width: 38%;
+}
+
+.organization-table__column_col_10 {
+  width: 2%;
+}
+
+.organization-table__column_sorted {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: calc(var(--base) * 0.08);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: calc(var(--base) * 0.16);
+  margin-top: calc(var(--base) * 0.08);
+}
+</style>
