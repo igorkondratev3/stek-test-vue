@@ -5,8 +5,12 @@
   text-decoration: none;
   cursor: default;
   text-align: center;
-  transition: background-color 0.5s linear, color 0.5s linear;
-  font: 400 calc(var(--base) * 0.16) "Advent ProCY", "Advent ProLA";
+  transition:
+    background-color 0.5s linear,
+    color 0.5s linear;
+  font:
+    400 calc(var(--base) * 0.16) 'Advent ProCY',
+    'Advent ProLA';
   color: #000000;
   letter-spacing: 0.065em;
 
@@ -19,7 +23,7 @@
   }
 
   &:active {
-    box-shadow: calc(var(--base) * 0.1) calc(var(--base) * 0.05)  calc(var(--base) * 0.05) gray;
+    box-shadow: calc(var(--base) * 0.1) calc(var(--base) * 0.05) calc(var(--base) * 0.05) gray;
   }
 
   &:disabled {

@@ -1,118 +1,23 @@
 <script setup>
 import { computed, ref, unref, useTemplateRef } from 'vue'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
+import { SortParam, List, Organization } from '@/models/index.js'
 
 //СДЕЛАТЬ:
 //модалка на удаление
 //наведение красоты
-//типизация
+//типизация 
 //компоненты
 //баттон для кнопки удаления
 //таблица пуста
 //debounce на ввод фио
 //таблица одного размера
 //enum - desc,asc
-
-
-class SortParam {
-  constructor() {
-    this.sortParam = null
-  }
-
-  static sortQueue = ['ASC', 'DESC']
-
-  static compareFunctions = {
-    ASC: (a, b) => a > b ? 1 : -1,
-    DESC: (a, b) => a > b ? -1 : 1
-  }
-
-  compare(a, b) {
-    return SortParam.compareFunctions[this.sortParam](a, b)
-  }
-
-  changeSortParam() {
-    if (!this.sortParam) {
-      this.sortParam = SortParam.sortQueue[0]
-      return
-    }
-
-    if (SortParam.sortQueue.at(-1) === this.sortParam) {
-      this.sortParam = null
-      return
-    }
-
-    this.sortParam = SortParam.sortQueue[SortParam.sortQueue.indexOf(this.sortParam) + 1]
-  }
-
-  reset() {
-    this.sortParam = null
-  }
-}
-
-class List {
-  constructor(classObj, list) {
-    this.Class = classObj
-    this.list = list ? list.map((el) => new this.Class(el)) : []
-  }
-
-  add(item) {
-    this.list.push(new this.Class(item))
-  }
-
-  update(item) {
-    const index = this.list.findIndex((el) => el.id === item.id)
-    this.list.splice(index, 1, new this.Class(item))
-  }
-
-  remove(id) {
-    const index = this.list.findIndex((el) => el.id === id)
-    this.list.splice(index, 1)
-  }
-
-  getForAPI() {
-    return this.list.map((el) => el.getForAPI())
-  }
-}
-
-class Organization {
-  constructor(organization = null) {
-    this.id = organization?.id || null
-    this.name = organization?.name || null
-    this.directorName = organization?.directorName || null
-    this.telephoneNumber = organization?.telephoneNumber || null
-    this.address = new Address(organization?.address || null)
-  }
-
-  getForAPI() {
-    return {
-      id: this.id,
-      name: this.name,
-      directorName: this.directorName,
-      telephoneNumber: this.telephoneNumber,
-      address: this.address.getForAPI(),
-    }
-  }
-}
-
-class Address {
-  constructor(address = null) {
-    this.city = address?.split(',')[0].trim() || null
-    this.street = address?.split(',')[1].trim() || null
-    this.house = address?.split(',')[2].trim() || null
-  }
-
-  get fullAddress() {
-    return `${this.city}, ${this.street}, ${this.house}`
-  }
-
-  getForAPI() {
-    return this.fullAddress
-  }
-}
-
+//надпись о пустой таблице
+//протестировать с пустым хранилищем
 
 const createOrganizationModal = useTemplateRef('create-organization-modal')
-const openCreateOrganizationModal = (el) => {
+const openCreateOrganizationModal = el => {
   if (el?.id) {
     currentOrganization.value = new Organization(el.getForAPI())
   }
@@ -135,27 +40,24 @@ const initOrganizationList = () => {
 
 initOrganizationList()
 
+const organizationList = ref(new List(Organization, JSON.parse(localStorage.getItem(organizationListName))))
 
-const organizationList = ref(
-  new List(Organization, JSON.parse(localStorage.getItem(organizationListName))))
-
-const createOrganization = (currentOrganization) => {
+const createOrganization = currentOrganization => {
   organizationList.value.add({ ...unref(currentOrganization).getForAPI(), ...{ id: uuidv4() } })
   localStorage.setItem(organizationListName, JSON.stringify(organizationList.value.getForAPI()))
   closeCreateOrganizationModal()
   return
 }
 
-const updateOrganization = (currentOrganization) => {
+const updateOrganization = currentOrganization => {
   organizationList.value.update(unref(currentOrganization).getForAPI())
   localStorage.setItem(organizationListName, JSON.stringify(organizationList.value.getForAPI()))
   closeCreateOrganizationModal()
   return
 }
 
-
 const currentOrganization = ref(new Organization())
-const resetCurrentOrganization = () => currentOrganization.value = new Organization()
+const resetCurrentOrganization = () => (currentOrganization.value = new Organization())
 
 const organizationValidationParams = {
   name: { required: true },
@@ -164,7 +66,7 @@ const organizationValidationParams = {
   address: {
     city: { required: true },
     street: { required: true },
-    house: { required: true },
+    house: { required: true }
   }
 }
 
@@ -192,22 +94,20 @@ const validateObject = (obj, objValidationParams) => {
   return true
 }
 
-const isOrganizationValid = computed(
-  () => validateObject(currentOrganization.value, organizationValidationParams))
-
+const isOrganizationValid = computed(() => validateObject(currentOrganization.value, organizationValidationParams))
 
 const directorNameFilter = ref('')
 
-const filteredOrganizationList = computed(() => organizationList.value.list.filter(
-  organization => organization.directorName.includes(directorNameFilter.value)))
-
+const filteredOrganizationList = computed(() =>
+  organizationList.value.list.filter(organization => organization.directorName.includes(directorNameFilter.value))
+)
 
 const sortedParams = ref({
   name: new SortParam(),
   directorName: new SortParam()
 })
 
-const initSort = (fieldName) => {
+const initSort = fieldName => {
   for (const key in sortedParams.value) {
     if (key !== fieldName) {
       sortedParams.value[key].reset()
@@ -226,96 +126,91 @@ const sortedOrganizationList = computed(() => {
   return filteredOrganizationList.value
 })
 
-
 const elementsInPage = 10
-const numberOfPages = computed(
-  () => Math.ceil(sortedOrganizationList.value.length / elementsInPage))
+const numberOfPages = computed(() => Math.ceil(sortedOrganizationList.value.length / elementsInPage))
 const pageNumber = ref(1)
-const currentPageContent = computed(
-  () => sortedOrganizationList.value.slice((pageNumber.value - 1) * 10,
-    (pageNumber.value - 1) * 10 + 10))
-const setPageNumber = newPageNumber => pageNumber.value = newPageNumber
+const currentPageContent = computed(() =>
+  sortedOrganizationList.value.slice((pageNumber.value - 1) * 10, (pageNumber.value - 1) * 10 + 10)
+)
+const setPageNumber = newPageNumber => (pageNumber.value = newPageNumber)
 
 const removeOrganization = id => {
   organizationList.value.remove(id)
 }
-
-
 </script>
 
 <template>
   <div class="page start-page">
     <header class="start-page__header">Справочник организаций</header>
     <main class="start-page__main">
-
       <input
         type="text"
         placeholder="Найти по ФИО..."
         v-model="directorNameFilter"
-      >
+      />
 
       <button
         class="base-button"
         @click="openCreateOrganizationModal"
-      >Добавить
+      >
+        Добавить
       </button>
 
       <table>
         <thead>
-        <tr>
-          <th @click="initSort('name')">
-            Название
-            <img
-              v-show="sortedParams.name.sortParam"
-              src="/src/assets/images/arrow_down.svg"
-              alt="delete"
-              class="icon-24"
-              :class="{'rotate_180deg': sortedParams.name.sortParam === 'DESC'}"
-              title="удалить"
-            />
-          </th>
-          <th @click="initSort('directorName')">
-            ФИО директора
-            <img
-              v-show="sortedParams.directorName.sortParam"
-              src="/src/assets/images/arrow_down.svg"
-              alt="delete"
-              class="icon-24"
-              :class="{'rotate_180deg': sortedParams.directorName.sortParam === 'DESC'}"
-              title="удалить"
-            />
-          </th>
-          <th>Номер телефона</th>
-          <th>Адрес</th>
-        </tr>
+          <tr>
+            <th @click="initSort('name')">
+              Название
+              <img
+                v-show="sortedParams.name.sortParam"
+                src="/src/assets/images/arrow_down.svg"
+                alt="delete"
+                class="icon-24"
+                :class="{ rotate_180deg: sortedParams.name.sortParam === 'DESC' }"
+                title="удалить"
+              />
+            </th>
+            <th @click="initSort('directorName')">
+              ФИО директора
+              <img
+                v-show="sortedParams.directorName.sortParam"
+                src="/src/assets/images/arrow_down.svg"
+                alt="delete"
+                class="icon-24"
+                :class="{ rotate_180deg: sortedParams.directorName.sortParam === 'DESC' }"
+                title="удалить"
+              />
+            </th>
+            <th>Номер телефона</th>
+            <th>Адрес</th>
+          </tr>
         </thead>
         <tbody>
-        <tr
-          v-for="organization in currentPageContent"
-          :key="organization.id"
-          @click="openCreateOrganizationModal(organization)"
-          class="cursor-pointer"
-        >
-          <td>{{ organization.name }}</td>
-          <td>{{ organization.directorName }}</td>
-          <td>{{ organization.telephoneNumber }}</td>
-          <td>{{ organization.address.fullAddress }}</td>
-          <td @click.stop="removeOrganization(organization.id)">
-            <img
-              src="/src/assets/images/delete.svg"
-              alt="delete"
-              class="icon-24"
-              title="удалить"
-            />
-          </td>
-        </tr>
+          <tr
+            v-for="organization in currentPageContent"
+            :key="organization.id"
+            @click="openCreateOrganizationModal(organization)"
+            class="cursor-pointer"
+          >
+            <td>{{ organization.name }}</td>
+            <td>{{ organization.directorName }}</td>
+            <td>{{ organization.telephoneNumber }}</td>
+            <td>{{ organization.address.fullAddress }}</td>
+            <td @click.stop="removeOrganization(organization.id)">
+              <img
+                src="/src/assets/images/delete.svg"
+                alt="delete"
+                class="icon-24"
+                title="удалить"
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
 
-
       <button
         class="base-button"
-        :class="{'active-button': n === pageNumber }"
+        :class="{ 'active-button': n === pageNumber }"
         v-for="n in numberOfPages"
         :key="n + 'pageNumber'"
         @click="setPageNumber(n)"
@@ -329,36 +224,53 @@ const removeOrganization = id => {
       >
         <div class="dialog-content-wrapper">
           <div class="organization-dialog">
-            <label>Название <input
-              type="text"
-              v-model="currentOrganization.name"
+            <label
+              >Название
+              <input
+                type="text"
+                v-model="currentOrganization.name"
             /></label>
-            <label>ФИО директора <input
-              type="text"
-              v-model="currentOrganization.directorName"
+            <label
+              >ФИО директора
+              <input
+                type="text"
+                v-model="currentOrganization.directorName"
             /></label>
-            <label>Номер телефона <input
-              type="tel"
-              v-model="currentOrganization.telephoneNumber"
+            <label
+              >Номер телефона
+              <input
+                type="tel"
+                v-model="currentOrganization.telephoneNumber"
             /></label>
             <h4>Адрес</h4>
-            <label>Город <input
-              type="text"
-              v-model="currentOrganization.address.city"
+            <label
+              >Город
+              <input
+                type="text"
+                v-model="currentOrganization.address.city"
             /></label>
-            <label>Улица <input
-              type="text"
-              v-model="currentOrganization.address.street"
+            <label
+              >Улица
+              <input
+                type="text"
+                v-model="currentOrganization.address.street"
             /></label>
-            <label>Дом <input
-              type="text"
-              v-model="currentOrganization.address.house"
+            <label
+              >Дом
+              <input
+                type="text"
+                v-model="currentOrganization.address.house"
             /></label>
             {{ currentOrganization }}
             <button
               class="base-button"
               :disabled="!isOrganizationValid"
-              @click="() => currentOrganization.id ? updateOrganization(currentOrganization) : createOrganization(currentOrganization)"
+              @click="
+                () =>
+                  currentOrganization.id
+                    ? updateOrganization(currentOrganization)
+                    : createOrganization(currentOrganization)
+              "
             >
               Ок
             </button>
@@ -370,11 +282,9 @@ const removeOrganization = id => {
 </template>
 
 <style>
-
 .start-page {
   padding-bottom: calc(var(--base) * 0.9);
 }
-
 
 .start-page__header {
   font-size: calc(var(--base) * 0.48);
