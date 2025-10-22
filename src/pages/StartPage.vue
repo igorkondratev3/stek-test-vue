@@ -2,15 +2,52 @@
 import { computed, ref, unref, useTemplateRef } from 'vue'
 import { v4 as uuidv4 } from 'uuid';
 
-//Дополнительно
+//СДЕЛАТЬ:
 //модалка на удаление
 //наведение красоты
 //типизация
 //компоненты
 //баттон для кнопки удаления
+//таблица пуста
+//debounce на ввод фио
+//таблица одного размера
+//enum - desc,asc
 
 
+class SortParam {
+  constructor() {
+    this.sortParam = null
+  }
 
+  static sortQueue = ['ASC', 'DESC']
+
+  static compareFunctions = {
+    ASC: (a, b) => a > b ? 1 : -1,
+    DESC: (a, b) => a > b ? -1 : 1
+  }
+
+  compare(a, b) {
+    return SortParam.compareFunctions[this.sortParam](a, b)
+  }
+
+  changeSortParam() {
+    if (!this.sortParam) {
+      this.sortParam = SortParam.sortQueue[0]
+      return
+    }
+
+    if (SortParam.sortQueue.at(-1) === this.sortParam) {
+      this.sortParam = null
+      return
+    }
+
+    this.sortParam = SortParam.sortQueue[SortParam.sortQueue.indexOf(this.sortParam) + 1]
+  }
+
+  reset() {
+    this.sortParam = null
+  }
+}
 
 class List {
   constructor(classObj, list) {
@@ -164,18 +201,46 @@ const directorNameFilter = ref('')
 const filteredOrganizationList = computed(() => organizationList.value.list.filter(
   organization => organization.directorName.includes(directorNameFilter.value)))
 
+
+const sortedParams = ref({
+  name: new SortParam(),
+  directorName: new SortParam()
+})
+
+const initSort = (fieldName) => {
+  for (const key in sortedParams.value) {
+    if (key !== fieldName) {
+      sortedParams.value[key].reset()
+    }
+  }
+  sortedParams.value[fieldName].changeSortParam()
+}
+
+const sortedOrganizationList = computed(() => {
+  for (const key in sortedParams.value) {
+    if (sortedParams.value[key].sortParam) {
+      return filteredOrganizationList.value.toSorted((a, b) => sortedParams.value[key].compare(a[key], b[key]))
+    }
+  }
+
+  return filteredOrganizationList.value
+})
+
+
 const elementsInPage = 10
 const numberOfPages = computed(
-  () => Math.ceil(filteredOrganizationList.value.length / elementsInPage))
+  () => Math.ceil(sortedOrganizationList.value.length / elementsInPage))
 const pageNumber = ref(1)
 const currentPageContent = computed(
-  () => filteredOrganizationList.value.slice((pageNumber.value - 1) * 10,
+  () => sortedOrganizationList.value.slice((pageNumber.value - 1) * 10,
     (pageNumber.value - 1) * 10 + 10))
 const setPageNumber = newPageNumber => pageNumber.value = newPageNumber
 
 const removeOrganization = id => {
   organizationList.value.remove(id)
 }
+
+
 </script>
 
 <template>
@@ -198,8 +263,28 @@ const removeOrganization = id => {
       <table>
         <thead>
         <tr>
-          <th>Название</th>
-          <th>ФИО директора</th>
+          <th @click="initSort('name')">
+            Название
+            <img
+              v-show="sortedParams.name.sortParam"
+              src="/src/assets/images/arrow_down.svg"
+              alt="delete"
+              class="icon-24"
+              :class="{'rotate_180deg': sortedParams.name.sortParam === 'DESC'}"
+              title="удалить"
+            />
+          </th>
+          <th @click="initSort('directorName')">
+            ФИО директора
+            <img
+              v-show="sortedParams.directorName.sortParam"
+              src="/src/assets/images/arrow_down.svg"
+              alt="delete"
+              class="icon-24"
+              :class="{'rotate_180deg': sortedParams.directorName.sortParam === 'DESC'}"
+              title="удалить"
+            />
+          </th>
           <th>Номер телефона</th>
           <th>Адрес</th>
         </tr>

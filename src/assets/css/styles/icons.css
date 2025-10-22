@@ -3,3 +3,7 @@
   width: calc(var(--base) * 0.24);
   height: calc(var(--base) * 0.24);
 }
+
+.rotate_180deg {
+  transform: rotate(180deg);
+}
