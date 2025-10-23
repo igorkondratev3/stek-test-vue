@@ -39,8 +39,8 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
           </div>
         </th>
         <th
-          @click="changeSortParam('directorName')"
           class="column organization-table__column_col_20"
+          @click="changeSortParam('directorName')"
         >
           <div class="organization-table__column_sorted">
             ФИО директора
@@ -60,10 +60,10 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
     </thead>
     <tbody>
       <tr
+        class="cursor-pointer"
         v-for="(organization, index) in currentPageContent"
         :key="organization.id || index + 'organization'"
         @click="$emit('selectOrganization', organization)"
-        class="cursor-pointer"
       >
         <td>{{ organization.name }}</td>
         <td>{{ organization.directorName }}</td>

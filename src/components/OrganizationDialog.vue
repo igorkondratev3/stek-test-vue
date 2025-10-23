@@ -49,14 +49,16 @@ defineExpose({ dialog })
               type="text"
               class="base-input"
               v-model="directorName"
-          /></label>
+            />
+          </label>
           <label>
             Номер телефона
             <input
               type="tel"
               class="base-input"
               v-model="telephoneNumber"
-          /></label>
+            />
+          </label>
           <h4>Адрес</h4>
           <label>
             Город
@@ -64,21 +66,24 @@ defineExpose({ dialog })
               type="text"
               class="base-input"
               v-model="city"
-          /></label>
+            />
+          </label>
           <label>
             Улица
             <input
               type="text"
               class="base-input"
               v-model="street"
-          /></label>
+            />
+          </label>
           <label>
             Дом
             <input
               type="text"
               class="base-input"
               v-model="house"
-          /></label>
+            />
+          </label>
         </div>
 
         <div class="dialog-content_actions">
