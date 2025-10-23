@@ -1,7 +1,7 @@
 import { Address } from '@/models/Address.ts'
-import type { IOrganizationDataForAPI, IOrganization, IOrganizationData, IAddress } from '@/types'
+import type { IOrganizationDataForAPI, IOrganization, IAddress } from '@/types'
 
-export class Organization implements IOrganization{
+export class Organization implements IOrganization {
   public id: string | null
   public name: string | null
   public directorName: string | null

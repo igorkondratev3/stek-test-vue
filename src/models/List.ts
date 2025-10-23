@@ -18,7 +18,7 @@ export class List implements IList {
     this.list.splice(index, 1, new this.Class(item))
   }
 
-  remove(id: number) {
+  remove(id: string) {
     const index = this.list.findIndex(el => el.id === id)
     this.list.splice(index, 1)
   }

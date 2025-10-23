@@ -14,6 +14,6 @@
   letter-spacing: 0.065em;
 
   &::placeholder {
-    color: rgba(0, 0, 0, 0.8)
+    color: rgba(0, 0, 0, 0.8);
   }
 }

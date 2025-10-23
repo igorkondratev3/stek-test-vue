@@ -1,4 +1,4 @@
-import type { IAddress,IAddressForApi } from '@/types'
+import type { IAddress, IAddressForApi } from '@/types'
 
 export interface IOrganizationData {
   id: string | null

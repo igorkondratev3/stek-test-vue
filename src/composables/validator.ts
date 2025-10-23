@@ -1,6 +1,6 @@
 import { computed, type Ref } from 'vue'
 
-const validateField = (field, validationParams) => {
+const validateField = (field: string | number, validationParams: object) => {
   for (const validationParam in validationParams) {
     switch (validationParam) {
       case 'required':
@@ -11,7 +11,7 @@ const validateField = (field, validationParams) => {
   }
 }
 
-const validateObject = (obj, objValidationParams) => {
+const validateObject = (obj: { [key: string]: any }, objValidationParams: { [key: string]: any }) => {
   for (const key in objValidationParams) {
     if (obj?.[key] && typeof obj[key] === 'object') {
       return validateObject(obj[key], objValidationParams[key])
@@ -24,7 +24,7 @@ const validateObject = (obj, objValidationParams) => {
   return true
 }
 
-export const useValidator = (obj: Ref<Object>, params: Object) => {
+export const useValidator = (obj: Ref<object>, params: object) => {
   const isValid = computed(() => validateObject(obj.value, params))
 
   return {

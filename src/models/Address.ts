@@ -1,6 +1,6 @@
 import type { IAddress } from '@/types'
 
-export class Address implements IAddress{
+export class Address implements IAddress {
   public city: string | null
   public street: string | null
   public house: string | null

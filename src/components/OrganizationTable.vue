@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IOrganization, IOrganizationTableProps } from '@/types'
+import type { IOrganization, IOrganizationTableProps } from '@/types'
 import { usePagination, useSorting } from '@/composables'
 import { toRef } from 'vue'
 
@@ -27,15 +27,15 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
           @click="changeSortParam('name')"
           class="column organization-table__column_col_20"
         >
-          <div class='organization-table__column_sorted'>
+          <div class="organization-table__column_sorted">
             Название
             <img
-                v-show="sortedParams.name.sortParam"
-                src="/src/assets/images/arrow_down.svg"
-                alt="arrow"
-                class="icon-24"
-                :class="{ rotate_180deg: sortedParams.name.sortParam === 'DESC' }"
-                title="удалить"
+              v-show="sortedParams.name?.sortParam"
+              src="/src/assets/images/arrow_down.svg"
+              alt="arrow"
+              class="icon-24"
+              :class="{ rotate_180deg: sortedParams.name?.sortParam === 'DESC' }"
+              title="удалить"
             />
           </div>
         </th>
@@ -43,15 +43,15 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
           @click="changeSortParam('directorName')"
           class="column organization-table__column_col_20"
         >
-          <div class='organization-table__column_sorted'>
+          <div class="organization-table__column_sorted">
             ФИО директора
             <img
-                v-show="sortedParams.directorName.sortParam"
-                src="/src/assets/images/arrow_down.svg"
-                alt="arrow"
-                class="icon-24"
-                :class="{ rotate_180deg: sortedParams.directorName.sortParam === 'DESC' }"
-                title="удалить"
+              v-show="sortedParams.directorName?.sortParam"
+              src="/src/assets/images/arrow_down.svg"
+              alt="arrow"
+              class="icon-24"
+              :class="{ rotate_180deg: sortedParams.directorName?.sortParam === 'DESC' }"
+              title="удалить"
             />
           </div>
         </th>
@@ -62,8 +62,8 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
     </thead>
     <tbody>
       <tr
-        v-for="organization in currentPageContent"
-        :key="organization.id"
+        v-for="(organization, index) in currentPageContent"
+        :key="organization.id || index + 'organization'"
         @click="$emit('selectOrganization', organization)"
         class="cursor-pointer"
       >
@@ -85,11 +85,11 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
 
   <div class="pagination">
     <button
-        class="base-button pagination-button"
-        :class="{ 'active-button': n === pageNumber }"
-        v-for="n in numberOfPages"
-        :key="n + 'pageNumber'"
-        @click="changePageNumber(n)"
+      class="base-button pagination-button"
+      :class="{ 'active-button': n === pageNumber }"
+      v-for="n in numberOfPages"
+      :key="n + 'pageNumber'"
+      @click="changePageNumber(n)"
     >
       {{ n }}
     </button>
@@ -123,8 +123,9 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
 
 .pagination {
   display: flex;
-  justify-content: center;
   gap: calc(var(--base) * 0.16);
+  width: 100%;
   margin-top: calc(var(--base) * 0.08);
+  overflow: auto;
 }
 </style>

@@ -1,10 +1,12 @@
 export interface IModelObject {
   id: string
-  [key: string]: null | string
+  [key: string]: null | string | object
+
+  getForAPI(): object[]
 }
 
 export interface IModelClass {
-  new (): IModelObject
+  new (obj: object): IModelObject
 }
 
 export interface IList {
@@ -13,6 +15,6 @@ export interface IList {
 
   add(item: IModelObject): void
   update(item: IModelObject): void
-  remove(id: number): void
-  geForAPI(): [IModelObject]
+  remove(id: string): void
+  getForAPI(): object[]
 }

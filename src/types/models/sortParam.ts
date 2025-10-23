@@ -1,5 +1,7 @@
 export type SortType = 'ASC' | 'DESC'
 
+export type SortTypeArr = SortType[]
+
 export type CompareResult = -1 | 1
 
 export type CompareFunction = (a: string, b: string) => CompareResult
