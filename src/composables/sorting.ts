@@ -26,7 +26,9 @@ export const useSorting = <T>(arr: Ref<T[]>, sortedFieldNameList: string[]) => {
   const sortedArr: ComputedRef<T[]> = computed(() => {
     for (const key in sortedParams.value) {
       if (sortedParams.value[key]?.sortParam) {
-        return arr.value.toSorted((a: string, b: string) => sortedParams.value[key]?.compare(a[key], b[key]))
+        return arr.value.toSorted((a: { [key: string]: any }, b: { [key: string]: any }) =>
+          sortedParams.value[key]?.compare(a[key], b[key])
+        )
       }
     }
 

@@ -1,6 +1,7 @@
 const initStorage = (name: string, initValue: any) => {
-  const data = JSON.parse(localStorage.getItem(name))
-  if (!data) {
+  const data = localStorage.getItem(name)
+  const parsedData = data ? JSON.parse(data) : null
+  if (!parsedData) {
     localStorage.setItem(name, JSON.stringify(initValue))
   }
 }
@@ -9,7 +10,9 @@ export const useLocalstorage = (name: string, initValue: any) => {
   initStorage(name, initValue)
 
   const getValue = () => {
-    return JSON.parse(localStorage.getItem(name))
+    const data = localStorage.getItem(name)
+    const parsedData = data ? JSON.parse(data) : null
+    return parsedData
   }
 
   const setValue = (value: any) => {

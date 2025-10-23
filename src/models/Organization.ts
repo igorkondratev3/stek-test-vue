@@ -1,5 +1,5 @@
-import { Address } from '@/models/Address.ts'
-import type { IOrganizationDataForAPI, IOrganization, IAddress } from '@/types'
+import { Address } from './Address.ts'
+import type { IOrganization, IAddress, IOrganizationDataForAPI } from '../types'
 
 export class Organization implements IOrganization {
   public id: string | null

@@ -1,4 +1,4 @@
-import type { IList, IModelClass, IModelObject } from '@/types/models'
+import type { IList, IModelClass, IModelObject, IModelObjectData } from '@/types/models'
 
 export class List implements IList {
   public Class: IModelClass
@@ -9,11 +9,11 @@ export class List implements IList {
     this.list = list ? list.map(el => new this.Class(el)) : []
   }
 
-  add(item: IModelObject) {
+  add(item: IModelObjectData) {
     this.list.push(new this.Class(item))
   }
 
-  update(item: IModelObject) {
+  update(item: IModelObjectData) {
     const index = this.list.findIndex(el => el.id === item.id)
     this.list.splice(index, 1, new this.Class(item))
   }

@@ -33,9 +33,8 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
               v-show="sortedParams.name?.sortParam"
               src="/src/assets/images/arrow_down.svg"
               alt="arrow"
-              class="icon-24"
+              class="icon-16"
               :class="{ rotate_180deg: sortedParams.name?.sortParam === 'DESC' }"
-              title="удалить"
             />
           </div>
         </th>
@@ -49,9 +48,8 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
               v-show="sortedParams.directorName?.sortParam"
               src="/src/assets/images/arrow_down.svg"
               alt="arrow"
-              class="icon-24"
+              class="icon-16"
               :class="{ rotate_180deg: sortedParams.directorName?.sortParam === 'DESC' }"
-              title="удалить"
             />
           </div>
         </th>
@@ -71,13 +69,21 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
         <td>{{ organization.directorName }}</td>
         <td>{{ organization.telephoneNumber }}</td>
         <td>{{ organization.address.fullAddress }}</td>
-        <td @click.stop="$emit('removeOrganization', organization.id)">
-          <img
-            src="/src/assets/images/delete.svg"
-            alt="delete"
-            class="icon-24"
-            title="удалить"
-          />
+        <td
+          class="cursor-default"
+          @click.stop=""
+        >
+          <button
+            class="cursor-pointer"
+            @click.stop="$emit('removeOrganization', organization.id)"
+          >
+            <img
+              src="/src/assets/images/delete.svg"
+              alt="delete"
+              class="icon-16"
+              title="удалить"
+            />
+          </button>
         </td>
       </tr>
     </tbody>
@@ -116,6 +122,7 @@ const { numberOfPages, pageNumber, changePageNumber, currentPageContent } = useP
 
 .organization-table__column_sorted {
   display: flex;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
   gap: calc(var(--base) * 0.08);

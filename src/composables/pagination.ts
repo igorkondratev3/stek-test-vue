@@ -5,7 +5,7 @@ export const usePagination = <T>(arr: Ref<T[]>, elementsInPage: number = 10) => 
   const numberOfPages = computed(() => Math.ceil(arr.value.length / elementsInPage))
   const changePageNumber = (newPageNumber: number) => (pageNumber.value = newPageNumber)
   const currentPageContent: ComputedRef<T[]> = computed(() =>
-    arr.value.slice((pageNumber.value - 1) * 10, (pageNumber.value - 1) * 10 + 10)
+    arr.value.slice((pageNumber.value - 1) * elementsInPage, (pageNumber.value - 1) * elementsInPage + elementsInPage)
   )
 
   watch(

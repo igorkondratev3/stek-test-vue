@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IAddress, IOrganization, IOrganizationDialogProps } from '@/types'
-import { computed, type Ref, type TemplateRef, useTemplateRef } from 'vue'
+import { computed, type ModelRef, type TemplateRef, useTemplateRef } from 'vue'
 
 const props = defineProps<IOrganizationDialogProps>()
 
@@ -9,12 +9,12 @@ defineEmits<{
   save: []
 }>()
 
-const name: Ref<IOrganization['name']> = defineModel('name')
-const directorName: Ref<IOrganization['directorName']> = defineModel('directorName')
-const telephoneNumber: Ref<IOrganization['telephoneNumber']> = defineModel('telephoneNumber')
-const city: Ref<IAddress['city']> = defineModel('city')
-const street: Ref<IAddress['street']> = defineModel('street')
-const house: Ref<IAddress['house']> = defineModel('house')
+const name: ModelRef<IOrganization['directorName'] | undefined> = defineModel('name')
+const directorName: ModelRef<IOrganization['directorName'] | undefined> = defineModel('directorName')
+const telephoneNumber: ModelRef<IOrganization['telephoneNumber'] | undefined> = defineModel('telephoneNumber')
+const city: ModelRef<IAddress['city'] | undefined> = defineModel('city')
+const street: ModelRef<IAddress['street'] | undefined> = defineModel('street')
+const house: ModelRef<IAddress['house'] | undefined> = defineModel('house')
 
 const organizationDialogHeader = computed(() =>
   props.organizationId ? 'Редактировать организацию' : 'Добавить организацию'

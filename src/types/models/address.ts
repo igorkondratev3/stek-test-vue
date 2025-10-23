@@ -1,10 +1,13 @@
-export interface IAddress {
+export interface IAddressData {
   city: string | null
   street: string | null
   house: string | null
-  fullAddress: string
-
-  getForAPI(): string
 }
 
-export type IAddressForApi = string
+export interface IAddress extends IAddressData {
+  fullAddress: string
+
+  getForAPI(): IAddressData
+}
+
+export type IAddressForApi = IAddressData

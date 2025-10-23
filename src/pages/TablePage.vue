@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, type ComputedRef, ref } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { List, Organization } from '@/models/index.js'
 import { useDialog, useLocalstorage } from '@/composables/index.js'
@@ -30,7 +30,7 @@ const { getValue: getOrganizationListFromStorage, setValue: setOrganizationListI
 const organizationList = ref(new List(Organization, getOrganizationListFromStorage()))
 
 const directorNameFilter = ref('')
-const filteredOrganizationList = computed(() =>
+const filteredOrganizationList: ComputedRef<IOrganization[]> = computed(() =>
   organizationList.value.list.filter((organization: IOrganization) =>
     organization.directorName.includes(directorNameFilter.value)
   )
@@ -85,7 +85,7 @@ const saveOrganization = (currentOrganization: IOrganization) => {
           :sorted-field-name-list="sortedFieldNameList"
           :organization-list="filteredOrganizationList"
           @select-organization="initOpenOrganizationDialog"
-          @remove-organization="id => organizationList.remove(id)"
+          @remove-organization="(id: string) => organizationList.remove(id)"
         />
       </div>
 
@@ -112,7 +112,7 @@ const saveOrganization = (currentOrganization: IOrganization) => {
 }
 
 .table-page__header {
-  font-size: calc(var(--base) * 0.48);
+  font-size: calc(var(--base) * 0.24);
   font-weight: 700;
   margin-bottom: calc(var(--base) * 0.32);
   text-align: center;

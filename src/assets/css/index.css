@@ -13,18 +13,6 @@
   --authHeight: calc(var(--base) * 3.94);
 }
 
-@media (min-width: 2100px) {
-  :root {
-    --base: 5.2vmax;
-  }
-}
-
-@media (min-height: 2100px) {
-  :root {
-    --base: 5.2vmax;
-  }
-}
-
 body {
   min-height: 100vh;
   background-color: rgb(232, 238, 233);
@@ -38,7 +26,7 @@ body {
   min-height: 100vh;
   padding: calc(var(--base) * 0.16);
   font:
-    400 calc(var(--base) * 0.24) 'Advent ProCY',
+    400 calc(var(--base) * 0.16) 'Advent ProCY',
     'Advent ProLA';
   color: #000000;
   letter-spacing: 0.065em;
@@ -46,4 +34,8 @@ body {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.cursor-default {
+  cursor: default;
 }
