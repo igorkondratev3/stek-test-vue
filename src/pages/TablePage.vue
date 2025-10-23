@@ -54,11 +54,17 @@ const initCloseOrganizationDialog = () => {
 }
 
 const saveOrganization = (currentOrganization: IOrganization) => {
+  if (!isValidCurrentOrganization.value) return
   currentOrganization.id
     ? organizationList.value.update(currentOrganization.getForAPI())
     : organizationList.value.add({ ...currentOrganization.getForAPI(), ...{ id: uuidv4() } })
   setOrganizationListInStorage(organizationList.value.getForAPI())
   initCloseOrganizationDialog()
+}
+
+const initRemoveOrganization = (id: string) => {
+  organizationList.value.remove(id)
+  setOrganizationListInStorage(organizationList.value.getForAPI())
 }
 </script>
 
@@ -85,7 +91,7 @@ const saveOrganization = (currentOrganization: IOrganization) => {
           :sorted-field-name-list="sortedFieldNameList"
           :organization-list="filteredOrganizationList"
           @select-organization="initOpenOrganizationDialog"
-          @remove-organization="(id: string) => organizationList.remove(id)"
+          @remove-organization="(id: string) => initRemoveOrganization(id)"
         />
       </div>
 
